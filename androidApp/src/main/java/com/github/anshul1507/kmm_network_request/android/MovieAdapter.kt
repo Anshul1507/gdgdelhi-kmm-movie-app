@@ -1,10 +1,13 @@
 package com.github.anshul1507.kmm_network_request.android
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.github.anshul1507.kmm_network_request.android.databinding.ItemPopularMoviesBinding
+import com.github.anshul1507.kmm_network_request.android.movie_details.MovieDetailsActivity
+import com.github.anshul1507.kmm_network_request.model.MovieDetails
 import com.github.anshul1507.kmm_network_request.model.MovieInfo
 import com.github.anshul1507.kmm_network_request.repo.posterBaseUrl
 
@@ -21,6 +24,12 @@ class MovieAdapter(private val mList: List<MovieInfo>) :
             Glide.with(itemView.context)
                 .load(moviePosterUrl)
                 .into(binding.cvIvPopularMovie)
+
+            itemView.setOnClickListener {
+                val intent = Intent(itemView.context, MovieDetailsActivity::class.java)
+                intent.putExtra("movieID", movie.id)
+                itemView.context.startActivity(intent)
+            }
 
         }
     }

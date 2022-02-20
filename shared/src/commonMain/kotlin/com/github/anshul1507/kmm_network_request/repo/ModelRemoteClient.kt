@@ -9,7 +9,6 @@ import io.ktor.client.request.*
 //Make your own API_KEY from https://www.themoviedb.org/settings/api
 const val API_KEY = "910cb471f3326152066529eef1b406b2"
 const val requestUrl = "https://api.themoviedb.org/3/movie/popular?api_key=$API_KEY"
-var movieDetailUrl = "https://api.themoviedb.org/3/movie/"
 const val posterBaseUrl = "https://image.tmdb.org/t/p/original/"
 
 suspend fun getPopularMovies(): MovieResponse {
@@ -17,6 +16,6 @@ suspend fun getPopularMovies(): MovieResponse {
 }
 
 suspend fun getMovieDetail(movieId: Int): MovieDetails {
-    movieDetailUrl += "${movieId}?api_key=${API_KEY}"
+    val movieDetailUrl = "https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}"
     return httpClient.get(movieDetailUrl)
 }

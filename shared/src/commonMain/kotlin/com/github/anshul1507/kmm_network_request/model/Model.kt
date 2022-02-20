@@ -68,7 +68,7 @@ data class MovieDetails(
     @SerialName("backdrop_path")
     val backdropPath: String,
 
-    val budget: String,
+    val budget: Int,
     val homepage: String,
     val id: String,
 
