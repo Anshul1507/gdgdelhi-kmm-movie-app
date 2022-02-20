@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val modelRepo: ModelRepo = ModelRepo()
 
-    fun getModelData(): LiveData<List<MovieInfo>> {
+    fun getPopularMovies(): LiveData<List<MovieInfo>> {
         val ld: MutableLiveData<List<MovieInfo>> = MutableLiveData<List<MovieInfo>>()
 
         viewModelScope.launch(Dispatchers.IO) {
