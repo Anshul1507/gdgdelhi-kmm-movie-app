@@ -18,7 +18,7 @@
         </activity>
 
         <activity
-            android:name=".MovieDetailsActivity"
+            android:name=".movie_details.MovieDetailsActivity"
             android:exported="true" />
 
         <meta-data
