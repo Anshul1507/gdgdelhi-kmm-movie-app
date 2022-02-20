@@ -1,6 +1,7 @@
 package com.github.anshul1507.kmm_network_request.android.movie_details
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
@@ -46,6 +47,11 @@ class MovieDetailsActivity : AppCompatActivity() {
             movieHomePage = it.homepage
 
         }
+
+        binding.fabTrailer.setOnClickListener {
+            val ytTitle = "http://www.youtube.com/results?search_query=${titleMovie}"
+            ytParser(ytTitle)
+        }
     }
 
     private fun fillUI(it: MovieDetails) {
@@ -62,5 +68,11 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         val moviePosterUrl = posterBaseUrl + it.posterPath
         Glide.with(this).load(moviePosterUrl).into(binding.imagePoster)
+    }
+
+    private fun ytParser(id: String) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.data = Uri.parse(id)
+        startActivity(intent)
     }
 }
