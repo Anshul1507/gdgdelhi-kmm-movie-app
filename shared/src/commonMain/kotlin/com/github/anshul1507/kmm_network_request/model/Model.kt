@@ -58,3 +58,42 @@ data class MovieInfo(
     @SerialName("vote_count")
     val voteCount: Int
 )
+
+
+@Serializable
+data class MovieDetails(
+
+    val adult: Boolean,
+
+    @SerialName("backdrop_path")
+    val backdropPath: String,
+
+    val budget: String,
+    val homepage: String,
+    val id: String,
+
+    @SerialName("original_title")
+    val originalTitle: String,
+
+    val overview: String,
+
+    @SerialName("poster_path")
+    val posterPath: String,
+
+    @SerialName("release_date")
+    val releaseDate: String,
+
+    val revenue: Long,
+
+    val runtime: Int,
+
+    val status: String,
+
+    val tagline: String,
+
+    val title: String,
+
+    @SerialName("vote_average")
+    val rating: Double
+)
+
