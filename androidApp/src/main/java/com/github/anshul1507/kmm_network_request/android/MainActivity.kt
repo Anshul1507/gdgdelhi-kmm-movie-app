@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         val gridLayoutManager = GridLayoutManager(this, 3)
         binding.recyclerViewPopularMovies.layoutManager = gridLayoutManager
         binding.recyclerViewPopularMovies.setHasFixedSize(true)
+        supportActionBar?.title = "Movie Mania"
 
         loadPageWiseData()
 

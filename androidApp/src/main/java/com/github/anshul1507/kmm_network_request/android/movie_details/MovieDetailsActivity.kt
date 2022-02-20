@@ -43,6 +43,11 @@ class MovieDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         mContext = applicationContext
+
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         val movieId: Int = intent.getIntExtra("movieID", 1)
 
         viewModel.getMovieDetails(movieId).observe(this) {
@@ -58,7 +63,7 @@ class MovieDetailsActivity : AppCompatActivity() {
             fillUI(it)
             titleMovie = it.title
             movieHomePageUrl = it.homepage
-
+            supportActionBar?.title = titleMovie
         }
 
         binding.fabTrailer.setOnClickListener {
@@ -69,6 +74,16 @@ class MovieDetailsActivity : AppCompatActivity() {
         binding.fabHomepage.setOnClickListener {
             customTabLinking(movieHomePageUrl)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     private fun fillUI(it: MovieDetails) {
