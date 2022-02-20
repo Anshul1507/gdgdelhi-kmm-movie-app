@@ -1,5 +1,7 @@
 package com.github.anshul1507.kmm_network_request.android.movie_details
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,7 +10,13 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsClient
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.browser.customtabs.CustomTabsServiceConnection
+import androidx.browser.customtabs.CustomTabsSession
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.github.anshul1507.kmm_network_request.android.R
 import com.github.anshul1507.kmm_network_request.android.databinding.ActivityMovieDetailsBinding
 import com.github.anshul1507.kmm_network_request.model.MovieDetails
 import com.github.anshul1507.kmm_network_request.repo.posterBaseUrl
@@ -23,13 +31,18 @@ class MovieDetailsActivity : AppCompatActivity() {
         ActivityMovieDetailsBinding.inflate(layoutInflater)
     }
 
+    private lateinit var mContext: Context
     private lateinit var titleMovie: String
-    private lateinit var movieHomePage: String
+    private lateinit var movieHomePageUrl: String
+    private var customTabsServiceConnection: CustomTabsServiceConnection? = null
+    private var mClient: CustomTabsClient? = null
+    var customTabsSession: CustomTabsSession? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        mContext = applicationContext
         val movieId: Int = intent.getIntExtra("movieID", 1)
 
         viewModel.getMovieDetails(movieId).observe(this) {
@@ -44,13 +57,17 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             fillUI(it)
             titleMovie = it.title
-            movieHomePage = it.homepage
+            movieHomePageUrl = it.homepage
 
         }
 
         binding.fabTrailer.setOnClickListener {
             val ytTitle = "http://www.youtube.com/results?search_query=${titleMovie}"
             ytParser(ytTitle)
+        }
+
+        binding.fabHomepage.setOnClickListener {
+            customTabLinking(movieHomePageUrl)
         }
     }
 
@@ -74,5 +91,52 @@ class MovieDetailsActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.data = Uri.parse(id)
         startActivity(intent)
+    }
+
+    fun customTabLinking(url: String?) {
+        customTabsServiceConnection = object : CustomTabsServiceConnection() {
+            override fun onCustomTabsServiceConnected(
+                componentName: ComponentName,
+                customTabsClient: CustomTabsClient
+            ) { //pre-warning means to fast the surfing
+                mClient = customTabsClient
+                mClient!!.warmup(0L)
+                customTabsSession = mClient!!.newSession(null)
+            }
+
+            override fun onServiceDisconnected(componentName: ComponentName) {
+                mClient = null
+            }
+        }
+        CustomTabsClient.bindCustomTabsService(
+            mContext,
+            "com.android.chrome",
+            customTabsServiceConnection as CustomTabsServiceConnection
+        )
+        val uri = Uri.parse(url)
+        //Create an Intent Builder
+        val intentBuilder = CustomTabsIntent.Builder()
+        intentBuilder.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorPrimaryDark))
+        intentBuilder.setSecondaryToolbarColor(
+            ContextCompat.getColor(
+                mContext,
+                R.color.colorPrimaryDark
+            )
+        )
+        //Set Start and Exit Animations
+        intentBuilder.setStartAnimations(mContext, R.anim.slide_in_right, R.anim.slide_out_left)
+        intentBuilder.setExitAnimations(
+            mContext,
+            R.anim.slide_in_right,
+            R.anim.slide_out_left
+        )
+        //build custom tabs intent
+        val customTabsIntent = intentBuilder.build()
+        customTabsIntent.intent.setPackage("com.android.chrome")
+        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intentBuilder.setShowTitle(true)
+        intentBuilder.enableUrlBarHiding()
+        customTabsIntent.launchUrl(mContext, uri)
     }
 }
