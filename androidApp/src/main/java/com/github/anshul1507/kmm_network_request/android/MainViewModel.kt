@@ -9,11 +9,11 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
     private val modelRepo: ModelRepo = ModelRepo()
 
-    fun getPopularMovies(): LiveData<List<MovieInfo>> {
+    fun getPopularMovies(pageNo: Int): LiveData<List<MovieInfo>> {
         val ld: MutableLiveData<List<MovieInfo>> = MutableLiveData<List<MovieInfo>>()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val response = modelRepo.getPopularMoviesData()
+            val response = modelRepo.getPopularMoviesData(pageNo)
 
             ld.postValue(response.moviesList)
 
