@@ -5,7 +5,9 @@ import com.github.anshul1507.kmm_network_request.model.Model
 import io.ktor.client.request.*
 
 
-const val requestUrl = "https:www.google.com"
+//Make your own API_KEY from https://www.themoviedb.org/settings/api
+const val API_KEY = "910cb471f3326152066529eef1b406b2"
+const val requestUrl = "https://api.themoviedb.org/3/movie/popular?api_key=$API_KEY"
 
 suspend fun getData(): Model {
     return httpClient.get(requestUrl)
