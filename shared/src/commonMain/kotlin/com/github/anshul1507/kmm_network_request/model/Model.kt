@@ -3,17 +3,58 @@ package com.github.anshul1507.kmm_network_request.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-data class Model(
-    val label: String,
-    val list: List<SecondModel>
+@Serializable
+data class MovieResponse(
+
+    @SerialName("page")
+    val page: Int,
+
+    @SerialName("results")
+    val moviesList: List<MovieInfo>,
+
+    @SerialName("total_pages")
+    val totalPages: Int,
+
+    @SerialName("total_results")
+    val totalResults: Int
 )
 
 @Serializable
-data class SecondModel(
+data class MovieInfo(
 
-    @SerialName("_id")
+    val adult: Boolean,
+
+    @SerialName("backdrop_path")
+    val backdropPath: String,
+
+    @SerialName("genre_ids")
+    val genreIds: List<Int>,
+
     val id: Int,
 
-    @SerialName("heading")
-    val name: String
+    @SerialName("original_language")
+    val originalLanguage: String,
+
+    @SerialName("original_title")
+    val originalTitle: String,
+
+    val overview: String,
+
+    val popularity: Double,
+
+    @SerialName("poster_path")
+    val posterPath: String,
+
+    @SerialName("release_date")
+    val releaseDate: String,
+
+    val title: String,
+
+    val video: Boolean,
+
+    @SerialName("vote_average")
+    val voteAverage: Double,
+
+    @SerialName("vote_count")
+    val voteCount: Int
 )
